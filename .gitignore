@@ -2,3 +2,7 @@
 /chunk/*
 /uploads/*
 .DS_Store
+./server/chunk/
+./server/uploads/
+
+
