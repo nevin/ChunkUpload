@@ -17,7 +17,7 @@ Client side, A library called ng-flow ( based on flow js ) - https://github.com/
 
 In the server side, there is limitation in the file upload size in php.ini and in the webserver configuration 
 
-####To support more than 2M uploads, change the settings in  php.ini
+#### To support more than 2M uploads, change the settings in  php.ini
 
 The maximum size of an uploaded file.
 

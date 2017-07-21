@@ -179,7 +179,7 @@ class VideoUploader
 
     public function validateChunkAfterMove(){
     	$file = $this->getFile();
-    	print_r($file);
+    	
 
         if (!$file) {
             return false;
@@ -188,15 +188,97 @@ class VideoUploader
         if (!isset($file['tmp_name']) || !isset($file['size']) || !isset($file['error'])) {
             return false;
         }
+       
+        $chunkFileSaved = $this->getChunkPath($this->getCurrentChunkNumber());
+        if(!file_exists($chunkFileSaved)){
+            return false;
+        }
 
-        // if (!file_exists($file)) {
-        //         return false;
-        //     }
-         echo $this->getChunkPath($this->getCurrentChunkNumber());
-       // echo $chunkSize = filesize();
+         if(filesize($chunkFileSaved) != $file['size']){
+            return false;
+         }
+
+         return true;
+
 
     }
+
+    // validate whether all the files are recieved.
+
+    public function validateFile()
+    {
+        $totalChunks = $this->getTotalChunks();
+        $totalChunksSize = 0;
+
+        for ($i = $totalChunks; $i >= 1; $i--) {
+            $file = $this->getChunkPath($i);
+            if (!file_exists($file)) {
+                return false;
+            }
+            $totalChunksSize += filesize($file);
+        }
+
+        return $this->getTotalSize() == $totalChunksSize;
+    }
     
+     public function saveToSingleFile()
+    {
+        $destination = "uploads/".$this->getFileName();
+        print_r($destination);
+        $fh = fopen($destination, 'wb');
+        // if (!$fh) {
+        //     throw new FileOpenException('failed to open destination file: '.$destination);
+        // }
+
+        // if (!flock($fh, LOCK_EX | LOCK_NB, $blocked)) {
+        //     // @codeCoverageIgnoreStart
+        //     if ($blocked) {
+        //         // Concurrent request has requested a lock.
+        //         // File is being processed at the moment.
+        //         // Warning: lock is not checked in windows.
+        //         return false;
+        //     }
+        //     // @codeCoverageIgnoreEnd
+
+        //     throw new FileLockException('failed to lock file: '.$destination);
+        // }
+
+        $totalChunks = $this->getTotalChunks();
+
+        try {
+           // $preProcessChunk = $this->config->getPreprocessCallback();
+
+            for ($i = 1; $i <= $totalChunks; $i++) {
+                $file = $this->getChunkPath($i);
+                $chunk = fopen($file, "rb");
+
+                if (!$chunk) {
+                    throw new Exception('failed to open chunk: '.$file);
+                }
+
+                // if ($preProcessChunk !== null) {
+                //     call_user_func($preProcessChunk, $chunk);
+                // }
+
+                stream_copy_to_stream($chunk, $fh);
+                fclose($chunk);
+            }
+        } catch (\Exception $e) {
+            // flock($fh, LOCK_UN);
+            // fclose($fh);
+            throw $e;
+        }
+
+        // if ($this->config->getDeleteChunksOnSave()) {
+        //     $this->deleteChunks();
+        // }
+
+        //flock($fh, LOCK_UN);
+        fclose($fh);
+
+        return true;
+    }
+
     
 }
 
@@ -206,9 +288,10 @@ $video = new VideoUploader("uploads","chunk");
 $video->uploadRequest();
 if($video->validateChunk()){
 	$video->saveChunk();
-	$video->validateChunkAfterMove();
+echo	$video->validateChunkAfterMove();
 }
-
+echo $video->validateFile();
+$video->saveToSingleFile();
 echo "<pre>";
 
 print_r($video->getAllParam());

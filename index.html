@@ -12,12 +12,12 @@
       flow-drag-leave="style={}"
       ng-style="style">
 <div class="container">
-  <h1>Video Uploader</h1>
+  <h1>Chunk Video Uploader</h1>
   <hr class="soften"/>
 
   <div class="row">
     <div class="span6">
-      <h2>Buttons:</h2>
+      <h2>Select the video file to upload</h2>
 
       <span class="btn" flow-btn><i class="icon icon-file"></i>Upload File</span>
       <span class="btn" flow-btn flow-directory ng-show="$flow.supportDirectory"><i class="icon icon-folder-open"></i>
@@ -27,7 +27,7 @@
   </div>
   <hr class="soften">
 
-  <h2>Transfers:</h2>
+  <h2>Upload Status</h2>
 
   <p>
     <a class="btn btn-small btn-success" ng-click="$flow.resume()">Upload</a>
