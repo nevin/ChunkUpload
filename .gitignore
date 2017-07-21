@@ -1,0 +1,5 @@
+#ignore the chunk files
+/chunk/*.*
+/temp/*.*
+/uploads/*
+.DS_Store
