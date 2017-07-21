@@ -226,9 +226,9 @@ class VideoUploader
         $destination = "uploads/".$this->getFileName();
         print_r($destination);
         $fh = fopen($destination, 'wb');
-        // if (!$fh) {
-        //     throw new FileOpenException('failed to open destination file: '.$destination);
-        // }
+        if (!$fh) {
+            throw new Exception('failed to open destination file: '.$destination);
+        }
 
         // if (!flock($fh, LOCK_EX | LOCK_NB, $blocked)) {
         //     // @codeCoverageIgnoreStart
@@ -240,13 +240,12 @@ class VideoUploader
         //     }
         //     // @codeCoverageIgnoreEnd
 
-        //     throw new FileLockException('failed to lock file: '.$destination);
+        //     throw new Exception('failed to lock file: '.$destination);
         // }
 
         $totalChunks = $this->getTotalChunks();
 
         try {
-           // $preProcessChunk = $this->config->getPreprocessCallback();
 
             for ($i = 1; $i <= $totalChunks; $i++) {
                 $file = $this->getChunkPath($i);
@@ -255,11 +254,6 @@ class VideoUploader
                 if (!$chunk) {
                     throw new Exception('failed to open chunk: '.$file);
                 }
-
-                // if ($preProcessChunk !== null) {
-                //     call_user_func($preProcessChunk, $chunk);
-                // }
-
                 stream_copy_to_stream($chunk, $fh);
                 fclose($chunk);
             }
