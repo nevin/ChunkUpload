@@ -101,6 +101,7 @@ html, body {
     display: inline-block;
     text-decoration: none;
     cursor: pointer;
+    float:right;
 }
 .file-upload a, a:visited {
 
