@@ -25,7 +25,9 @@ class Videos extends getID3 {
 		if($path){
 			$dirToScan = $path;
 		}
-       
+       if (!file_exists($dirToScan)) {
+           		mkdir($dirToScan);
+       }
 	    $filesList = array_values(array_diff(scandir($dirToScan), $this->exculdedFile));
 	    $fileDetails =[];
 

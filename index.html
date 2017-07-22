@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="playlist">
-                    <div class="desc-heading">Videos <span class="badge">{{playList.length}}</span></div>
+                    <div class="desc-heading">Videos <span ng-if="playList !='null'" class="badge">{{playList.length}}</span></div>
                     <hr>
                     <div ng-if="playList !='null'">
                         <div  style="overflow:scroll; height:12em; background:silver" >
