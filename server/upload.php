@@ -1,6 +1,6 @@
 <?php
 
-require_once("videoUploadClass.php");
+require_once("classes/videoUploadClass.php");
 
 $video = new VideoUploader("uploads","chunk");
 $video->saveUploads();
