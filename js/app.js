@@ -16,7 +16,7 @@ var app = angular.module('app', ['flow'])
     simultaneousUploads: 4
   };
   flowFactoryProvider.on('catchAll', function (event) {
-    console.log('catchAll', arguments);
+   // console.log('catchAll', arguments);
   });
   // Can be used with different implementations of Flow.js
   // flowFactoryProvider.factory = fustyFlowFactory;

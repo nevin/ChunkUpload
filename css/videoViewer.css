@@ -177,7 +177,7 @@ html, body {
     cursor: not-allowed;
     filter: alpha(opacity=60);
     opacity: 0.6;
-    background: #000000 url(http://www.wingo.com/angular/AngularShieldLogo.png) no-repeat center;
+    background: #000000  no-repeat center;
 }
 #feedLoading {
     position: absolute;
