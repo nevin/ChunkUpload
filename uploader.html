@@ -24,9 +24,9 @@
     <div class="span12">
       <h2>Select the video file to upload</h2>
 
-      <span class="btn" flow-btn><i class="icon icon-file"></i>Upload File</span>
+      <span class="btn" flow-btn><i class="icon icon-file"></i>Select File</span>
       <span class="btn" flow-btn flow-directory ng-show="$flow.supportDirectory"><i class="icon icon-folder-open"></i>
-        Upload Folder
+        Select Folder
       </span>
     </div>
   </div>
@@ -35,7 +35,7 @@
   <h2>Upload Status</h2>
 
   <p>
-    <a class="btn btn-small btn-success" ng-click="$flow.resume()">Upload</a>
+    <a class="btn btn-small btn-success" ng-click="$flow.resume()">Upload Files</a>
     <a class="btn btn-small btn-danger" ng-click="$flow.pause()">Pause</a>
     <a class="btn btn-small btn-info" ng-click="$flow.cancel()">Cancel</a>
     <span class="label label-info">Size: {{$flow.getSize()}}</span>

@@ -29,7 +29,7 @@
             <div ng-controller="videoViewerController as videoController">
                 
                
-                <div class="videogular-container">
+                <div class="videogular-container" ng-cloak>
                     <videogular vg-player-ready="videoController.onPlayerReady($API)" vg-complete="videoController.onCompleteVideo()" vg-theme="videoController.config.theme.url" class="video_container">
                         <vg-media vg-src="videoController.config.sources"
                                   vg-tracks="videoController.config.tracks">
@@ -79,8 +79,12 @@
                         </div>
                     </div>
                 </div>
+                <div id="veil" ng-show="isLoading"></div>
+                <div id="feedLoading" ng-show="isLoading">Loading...</div>
+
             </div>
         </div>
+
     </body>
 </html>
 

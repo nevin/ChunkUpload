@@ -1,6 +1,10 @@
 angular.module('myApp').controller('videoViewerController',
         ["$sce", "$timeout", "$scope","videoFactory",  function ($sce, $timeout, $scope, videoFactory) {
-           
+
+            $scope.setLoading = function(loading) {
+                $scope.isLoading = loading;
+            };
+            $scope.setLoading(true);
             $scope.sourceList = [];
             $scope.playList = {}; 
             $scope.controller = this;
@@ -10,8 +14,9 @@ angular.module('myApp').controller('videoViewerController',
             $scope.selectedVideo = "";
             $scope.videoList = [];
             videoFactory.getVideoList().then(function success(response){
-                
+                $scope.setLoading(false);
                 if(response.status == 200){
+
                     $scope.playList = response.data;
                     for(var i = 0; i<response.data.length;i++){
                         var sources = [];
@@ -43,27 +48,31 @@ angular.module('myApp').controller('videoViewerController',
             };
 
 
-                    $scope.controller.setVideo = function(index) {
-                
+             $scope.controller.setVideo = function(index) {
                 $scope.controller.API.stop();
                 $scope.controller.currentVideo = index;
                 $scope.selectedVideo  = $scope.videoList[index];
                 $scope.controller.config.sources = $scope.controller.videos[index].sources;
+                 $scope.setLoading(false);
                 $timeout($scope.controller.API.play.bind($scope.controller.API), 100);
             };
 
                 } else{
                     console.log("error");
+
                 }
 
             }, function error(error){
                 console.log(error);
+                $scope.setLoading(false);
+
             })
 
             
 
             $scope.controller.onPlayerReady = function(API) {
                 $scope.controller.API = API;
+
             };
 
             $scope.controller.onCompleteVideo = function() {
