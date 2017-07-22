@@ -6,12 +6,19 @@ Client side, A library called ng-flow ( based on flow js ) - https://github.com/
 
 ## Dependencies 
 
-### UI ( bundled in the appilication )
+### JS libraries ( bundled in the appilication )
 - Angularjs (v1.6)
-- bootstrap.min.css 
+- bootstrap.min.css
+- ng-flowflowjs - for chunk upload
+- Videogular - html5 based video player for angular
+
+### PHP libraries
+- getid3 - media file parse library
+
 
 ### Server side 
 - PHP server 5.3+
+
  
 ## Configurtions 
 
@@ -33,3 +40,15 @@ To Sets max size of post data allowed. This setting also affects file upload. To
 #### To support more than 2M uploads, change the settings in  nginx webserver
 
 `client_max_body_size 100M; `
+
+
+#### For video playback
+  - index.html
+#### for uploading video
+  - uploader.html
+
+#### Upload -  server Side
+  - server/upload.php
+
+#### get video  -  server Side
+ - server/download.php
