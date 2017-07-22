@@ -36,6 +36,9 @@ angular.module('myApp').controller('videoViewerController',
                 sources: $scope.controller.videos[0].sources,
                 theme: {
                     url: "./lib/js/videogular/themes/default/videogular.css"
+                },
+                plugins: {
+                        poster: "./img/press-here-to-play-button.png"
                 }
             };
 

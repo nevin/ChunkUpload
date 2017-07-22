@@ -1,95 +1,89 @@
 <!DOCTYPE html>
-<html ng-app="app" flow-init>
-<head>
-  <title>Video Uploader</title>
-  <script src="./lib/js/angular.min.js"></script>
-  <script src="./lib/js/ng-flow-standalone.js"></script>
-  <script src="./js/app.js"></script>
-  <link href="css/bootstrap-combined.min.css" rel="stylesheet"/>
-</head>
-<body flow-prevent-drop
-      flow-drag-enter="style={border: '5px solid green'}"
-      flow-drag-leave="style={}"
-      ng-style="style">
-<div class="container">
-  <h1>Chunk Video Uploader</h1>
-  <hr class="soften"/>
+<html>
+    <head>
+        <title></title>
+        <link rel="stylesheet" type="text/css" href="css/videoViewer.css">
+        <script src="./lib/js/angular.min.js"></script>
+        <script src="./lib/js/angular-sanitize.min.js"></script>
+        <script src="./lib/js/videogular/videogular.js"></script>
+        <script src="./lib/js/videogular/vg-controls.js"></script>
+        <script src="./lib/js/videogular/vg-overlay-play.js"></script>
+        <script src="./lib/js/videogular/vg-poster.js"></script>
+        <script src="./lib/js/videogular/vg-buffering.js"></script>
+      
+        <script type="text/javascript" src="./js/videoViewApp.js"></script>
+        <script type="text/javascript" src="./js/controller/videoViewerController.js"></script>
+        <script type="text/javascript" src="./js/factories/videoFactory.js"></script>
+        <link href="css/bootstrap-combined.min.css" rel="stylesheet"/>
 
-  <div class="row">
-    <div class="span6">
-      <h2>Select the video file to upload</h2>
 
-      <span class="btn" flow-btn><i class="icon icon-file"></i>Upload File</span>
-      <span class="btn" flow-btn flow-directory ng-show="$flow.supportDirectory"><i class="icon icon-folder-open"></i>
-        Upload Folder
-      </span>
-    </div>
-  </div>
-  <hr class="soften">
+    </head>
+    <body>
+        <div ng-app="myApp">
+            <header class="main-header">
+                <div><span class="heading">Watch Video </span> <span class="file-upload  glyphicon glyphicon-upload"">
+                    <a href="uploader.html"><label for="upload" class="file-upload__label" ><i class="icon icon-upload"></i> Upload</label></a>
+                </span></div>
+             </header>
+            <br>
+            <div ng-controller="videoViewerController as videoController">
+                
+               
+                <div class="videogular-container">
+                    <videogular vg-player-ready="videoController.onPlayerReady($API)" vg-complete="videoController.onCompleteVideo()" vg-theme="videoController.config.theme.url" class="video_container">
+                        <vg-media vg-src="videoController.config.sources"
+                                  vg-tracks="videoController.config.tracks">
+                        </vg-media>
 
-  <h2>Upload Status</h2>
+                        <vg-controls>
+                            <vg-play-pause-button></vg-play-pause-button>
+                            <vg-time-display>{{ currentTime | date:'mm:ss':'+0000' }}</vg-time-display>
+                            <vg-scrub-bar>
+                                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                            </vg-scrub-bar>
+                            <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
+                            <vg-volume>
+                                <vg-mute-button></vg-mute-button>
+                                <vg-volume-bar></vg-volume-bar>
+                            </vg-volume>
+                            <vg-fullscreen-button></vg-fullscreen-button>
+                        </vg-controls>
 
-  <p>
-    <a class="btn btn-small btn-success" ng-click="$flow.resume()">Upload</a>
-    <a class="btn btn-small btn-danger" ng-click="$flow.pause()">Pause</a>
-    <a class="btn btn-small btn-info" ng-click="$flow.cancel()">Cancel</a>
-    <span class="label label-info">Size: {{$flow.getSize()}}</span>
-    <span class="label label-info">Is Uploading: {{$flow.isUploading()}}</span>
-  </p>
-  <table class="table table-hover table-bordered table-striped" flow-transfers>
-    <thead>
-    <tr>
-      <th>#</th>
-      <th>Name</th>
-      <th>Size</th>
-      <th>Relative Path</th>
-      <th>Unique Identifier</th>
-      <th>#Chunks</th>
-      <th>Progress</th>
-      <th>Paused</th>
-      <th>Uploading</th>
-      <th>Completed</th>
-      <th>Settings</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="file in transfers">
-      <td>{{$index+1}}</td>
-      <td>{{file.name}}</td>
-      <td>{{file.size}}</td>
-      <td>{{file.relativePath}}</td>
-      <td>{{file.uniqueIdentifier}}</td>
-      <td>{{file.chunks.length}}</td>
-      <td>{{file.progress()}}</td>
-      <td>{{file.paused}}</td>
-      <td>{{file.isUploading()}}</td>
-      <td>{{file.isComplete()}}</td>
-      <td>
-        <div class="btn-group">
-          <a class="btn btn-mini btn-warning" ng-click="file.pause()" ng-hide="file.paused">
-            Pause
-          </a>
-          <a class="btn btn-mini btn-warning" ng-click="file.resume()" ng-show="file.paused">
-            Resume
-          </a>
-          <a class="btn btn-mini btn-danger" ng-click="file.cancel()">
-            Cancel
-          </a>
-          <a class="btn btn-mini btn-info" ng-click="file.retry()" ng-show="file.error">
-            Retry
-          </a>
+                        <vg-overlay-play></vg-overlay-play>
+                        <vg-buffering></vg-buffering>
+                        <vg-poster vg-url='videoController.config.plugins.poster'></vg-poster>
+
+                    </videogular>
+
+                </div>
+                <div class="video-description" ng-if="selectedVideo">
+                      <div class="desc-heading">{{selectedVideo.name}}</div>
+                      <div class="desc-subheading"><div class="desc-content" style="float:left"> Screen Resolution : <b>{{selectedVideo.video.resolution_x}} x {{selectedVideo.video.resolution_y}} </b></div><div  class="desc-content1"> Format : {{selectedVideo.fileformat}}</div></div>
+                </div>
+
+                <div class="playlist">
+                    <div class="desc-heading">Videos <span class="badge">{{playList.length}}</span></div>
+                    <hr>
+                    <div ng-if="playList !='null'">
+                        <div  style="overflow:scroll; height:12em; background:silver" >
+                            <ul class="list-group">
+                                <li ng-repeat="(key,value) in playList track by $index" class="list-group-item"><a ng-click="videoController.setVideo(key)" ><i ng-class="selectedVideo.filename == value.filename ? 'icon icon-play':'icon icon-film'"></i> {{value.filename}}</a><label></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div ng-if="playList=='null'">
+                        <div  style="overflow:hidden; height:3em; background:silver" >
+                           <div class="error">No Videos Found !</div>
+                            <div class="error">To Upload Video >> <a href="uploader.html">Click here</a> </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-
-  <hr class="soften"/>
-
-  <div class="alert" flow-drop flow-drag-enter="class='alert-success'" flow-drag-leave="class=''"
-          ng-class="class">
-    Drag And Drop your file here
-  </div>
-</div>
-</body>
+    </body>
 </html>
+
+
+
+

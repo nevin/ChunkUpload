@@ -9,15 +9,16 @@ html, body {
   left: 0;
   top: 0;
   width: 100%;
-  height: 6rem;
+  height: 5rem;
   color: white;
   background: #444;
-  line-height: 6rem;
   transform: translateY(0);
   transform: translate3d(0,0,0);
   transition: .25s transform;
   backface-visibility: hidden;
+    text-decoration: none;
 }
+
 
 .heads-up {
   transform: translateY(-6rem);
@@ -32,8 +33,15 @@ html, body {
 }
 
 
-
-
+.heading
+{
+    float: left;
+    font-size: 2rem;
+    margin: 1.8rem 0 0 2rem;
+    text-transform: capitalize;
+    width: 60%;
+    font-weight: bold;
+}
 
 
 .playlist ul {
@@ -72,11 +80,63 @@ html, body {
 
 .playlist{
     width: 100%;
-    height: 10rem;
+    height: 13rem;
     margin: auto;
-    overflow: scroll;
+    overflow: hidden;
     background: silver;
     color: white ;
+}
+
+.error {
+    text-align: center;
+    color :red;
+    font-weight: bold;
+}
+.error a{
+    color : blue;
+
+}
+.file-upload {
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
+}
+.file-upload a, a:visited {
+
+    text-decoration: none;
+}
+
+.file-upload__label {
+    width: 100px;
+    text-align: center;
+    vertical-align: middle;
+    height: 1.7rem;
+    display: block;
+    margin: 2rem 2rem;
+    line-height: 1.7rem;
+    color: #fff;
+    background: rgba(23, 136, 241, 0.65);
+    border-radius: .4em;
+    transition: background .3s;
+}
+
+&:hover {
+     cursor: pointer;
+     background: #000;
+ }
+}
+
+.file-upload__input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 1;
+    width: 0;
+    height: 100%;
+    opacity: 0;
 }
 .videogular-container .skipButton {
     position: absolute;
@@ -137,7 +197,7 @@ html, body {
     }
     .playlist {
         width: 940px;
-        height: 10rem;
+        height: 13rem;
     }
 
     .videogular-container.audio {
@@ -153,7 +213,7 @@ html, body {
     }
     .playlist {
         width: 728px;
-        height: 10rem;
+        height: 13rem;
     }
     .video-description {
            width: 728px;
