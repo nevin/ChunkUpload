@@ -1,5 +1,6 @@
 #ignore the chunk files
 .DS_Store
+.idea
 server/chunk/
 server/uploads/
 

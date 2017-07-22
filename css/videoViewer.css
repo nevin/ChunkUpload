@@ -1,0 +1,165 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+
+.main-header {
+  
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 6rem;
+  color: white;
+  background: #444;
+  line-height: 6rem;
+  transform: translateY(0);
+  transform: translate3d(0,0,0);
+  transition: .25s transform;
+  backface-visibility: hidden;
+}
+
+.heads-up {
+  transform: translateY(-6rem);
+  transform: translate3d(0,-6rem,0);
+}
+
+.main-header h1 {
+  float: left;
+  font-size: 1.4rem;
+  margin: 0 0 0 2rem;
+  text-transform: uppercase;
+}
+
+
+
+
+
+
+.playlist ul {
+    list-style-type: none;
+}
+
+.playlist ul a {
+    cursor: pointer;
+    color: #428bca;
+    text-decoration: none;
+}
+
+.playlist ul a:visited {
+    color: #428bca;
+}
+
+.playlist ul a:hover {
+    color: #428bca;
+    text-decoration: underline;
+}
+
+.videogular-container  {
+    width: 100%;
+    height: 320px;
+    margin: auto;
+    overflow: hidden;
+}
+.video-description {
+    width: 100%;
+    height: 4rem;
+    margin: auto;
+    overflow: hidden;
+    background: grey;
+    color: white ; 
+}
+
+.playlist{
+    width: 100%;
+    height: 10rem;
+    margin: auto;
+    overflow: scroll;
+    background: silver;
+    color: white ;
+}
+.videogular-container .skipButton {
+    position: absolute;
+    padding: 10px;
+    top: 10px;
+    right: 10px;
+    z-index: 99999;
+    color: white;
+    cursor: pointer;
+    background-color: #666666;
+    border: 2px #FFFFFF solid;
+    display: none;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    border-radius: 10px;
+}
+.desc-heading{
+    margin: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.desc-subheading{
+    margin: 5px 10px;
+    font-size: 1em;
+    
+}
+.desc-content{
+    float: left;
+    width: 25%;
+}
+@media (min-width: 1200px) {
+    .videogular-container {
+        width: 1170px;
+        height: 658.125px;
+    }
+    .video-description {
+         width: 1170px;
+    }
+    .playlist {
+        width: 1170px;
+        height: 10rem;
+    }
+
+    .videogular-container.audio {
+        width: 1170px;
+        height: 50px;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .videogular-container {
+        width: 940px;
+        height: 528.75px;
+    }
+  .video-description {
+        width: 940px;
+    }
+    .playlist {
+        width: 940px;
+        height: 10rem;
+    }
+
+    .videogular-container.audio {
+        width: 940px;
+        height: 50px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .videogular-container   {
+        width: 728px;
+        height: 409.5px;
+    }
+    .playlist {
+        width: 728px;
+        height: 10rem;
+    }
+    .video-description {
+           width: 728px;
+    }
+    .videogular-container.audio {
+        width: 728px;
+        height: 50px;
+    }
+}

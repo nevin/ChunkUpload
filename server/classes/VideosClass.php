@@ -18,7 +18,7 @@ class Videos extends getID3 {
 	}
 
 	public function getUploadFolderUrl (){
-		return $this->serverInfo["hostUrl"].$this->serverInfo["rootFolder"];
+		return $this->serverInfo["REQUEST_SCHEME"]."://".$this->serverInfo["hostUrl"].$this->serverInfo["rootFolder"];
 	}
 	public function getAllFiles($path=null){
 		$dirToScan = $this->sourceFolder;
@@ -32,10 +32,13 @@ class Videos extends getID3 {
 	    foreach ($filesList as $key => $filename) {
 	    	$filePath = $dirToScan.DIRECTORY_SEPARATOR.$filename;
 	    	$fileAnalysisResult = $this->analyze($filePath);
-	    	//print_r($fileAnalysisResult);
+	    	// echo "<pre>";
+	    	// print_r($fileAnalysisResult);
 
 	    
 	    	$fileProperties['filename'] = $fileAnalysisResult['filename'] ;
+	    	$path_parts = pathinfo($fileAnalysisResult['filename']);
+	    	$fileProperties['name'] = $path_parts['filename'];
 	    	$fileProperties['fileformat'] = $fileAnalysisResult['fileformat'];
 	    	$fileProperties['filesize'] = $fileAnalysisResult['filesize'];
 	    	$fileProperties['encoding']  = $fileAnalysisResult['encoding'] ;
