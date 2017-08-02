@@ -1,5 +1,6 @@
 <?php
 
+require_once(dirname(__FILE__)."/config.php");
 require_once(dirname(__FILE__).'/../libraries/getid3/getid3.php');
 require_once(dirname(__FILE__)."/UtilClass.php");
 
@@ -8,9 +9,14 @@ class Videos extends getID3 {
 	private $exculdedFile =   array('.', '..','.DS_Store');
     private $filesList = [];
     private $serverInfo = [];
-	public function __construct($location){
-		$this->sourceFolder =  $location;
+    private $apiDataFolder;
+    private $apiInfoFile;
+    private $apiData = "";
+	public function __construct(){
+		$this->sourceFolder =  Config::UPLOAD_FOLDER;
 		$this->serverInfo = Util::getServerDetails();
+		$this->apiDataFolder = Config::APIINFO_FOLDER;
+        $this->apiInfoFile = Config::APIINFO_FILE;
 	}
 
 	public function getSourceFolderName(){
@@ -55,4 +61,28 @@ class Videos extends getID3 {
 	    $this->fileList = $fileList;
         return json_encode($this->fileList);
 	}
+
+
+	public function getAllFilesListFromJson(){
+
+		$jsonDataFolder = $this->apiDataFolder;
+        $apiInfoFIle  = $this->apiInfoFile;
+        $fileUrl = $jsonDataFolder.DIRECTORY_SEPARATOR.$apiInfoFIle ;
+        $fp = fopen($fileUrl, 'r');
+        $this->apiData =fread($fp , filesize($fileUrl));
+        fclose($fp);
+        return $this->apiData;
+	}
+
+	public function getFiles($source = null){
+		$fileSourceSetting = $source ? $source : Config::API_DEFAULTSOURCE;
+		if ($fileSourceSetting == 'file'){
+		   return $this->getAllFiles();
+		}else{	 
+		   return $this->getAllFilesListFromJson();
+		}
+
+	}
+
+
 }

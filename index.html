@@ -64,7 +64,7 @@
                 <div class="playlist">
                     <div class="desc-heading">Videos <span ng-if="playList !='null'" class="badge">{{playList.length}}</span></div>
                     <hr>
-                    <div ng-if="playList !='null'">
+                    <div ng-if="playList !='null'" class="playlistContent">
                         <div  style="overflow:scroll; height:12em; background:silver" >
                             <ul class="list-group">
                                 <li ng-repeat="(key,value) in playList track by $index" class="list-group-item"><a ng-click="videoController.setVideo(key)" ><i ng-class="selectedVideo.filename == value.filename ? 'icon icon-play':'icon icon-film'"></i> {{value.filename}}</a><label></li>

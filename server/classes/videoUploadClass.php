@@ -1,25 +1,34 @@
 <?php
-
-class VideoUploader 
+require_once(dirname(__FILE__).'/../libraries/getid3/getid3.php');
+require_once(dirname(__FILE__)."/UtilClass.php");
+require_once(dirname(__FILE__)."/config.php");
+class VideoUploader  extends getID3 
 {
 	private $uploadFolder;
 	private $chunkFolder;
+    private $apiDataFolder;
+    private $apiInfoFile;
 	private $params;
 	private $file;
 	private $fileIdentifier;
 	private $setting_deleteChunks;
+    private $exculdedFile =   array('.', '..','.DS_Store');
+    private $serverInfo = [];
 
 	// constructor function which defines the basic settings   like the uploads folder location and the chunk folder
 
-	public function __construct ($uploadFolder,$chunkFolder,$deleteChunkSetting = true)
+	public function __construct ($uploadFolder = null,$chunkFolder = null,$deleteChunkSetting = true)
 	{
-		$this->uploadFolder = $uploadFolder;
-		$this->chunkFolder = $chunkFolder;
+		$this->uploadFolder = $uploadFolder ? $uploadFolder : Config::UPLOAD_FOLDER;
+		$this->chunkFolder = $chunkFolder ? $chunkFolder : Config::UPLOAD_TEMP;
+        $this->apiDataFolder = Config::APIINFO_FOLDER;
 		$this->setting_deleteChunks = $deleteChunkSetting;
-		$validateUploadFolder =  $this->validateFolder($this->uploadFolder);
-	    $validateChunkFolder = $this->validateFolder($this->chunkFolder);
+        $this->apiInfoFile = Config::APIINFO_FILE;
 
-		
+		$this->validateFolder($this->uploadFolder);
+	    $this->validateFolder($this->chunkFolder);
+        $this->validateFolder($this->apiDataFolder);
+        $this->serverInfo = Util::getServerDetails();
 	}
 
 	// fucntion to check whether the folder exist or not
@@ -298,6 +307,56 @@ class VideoUploader
         }
 
         return false;
-    }    
+    }   
+
+    public function getUploadFolderUrl (){
+        return $this->serverInfo["REQUEST_SCHEME"]."://".$this->serverInfo["hostUrl"].$this->serverInfo["rootFolder"];
+    }
+
+    public function getAllFiles($path=null){
+        $dirToScan = $this->uploadFolder;
+        if($path){
+            $dirToScan = $path;
+        }
+       if (!file_exists($dirToScan)) {
+                mkdir($dirToScan);
+       }
+        $filesList = array_values(array_diff(scandir($dirToScan), $this->exculdedFile));
+        $fileDetails =[];
+
+        foreach ($filesList as $key => $filename) {
+            $filePath = $dirToScan.DIRECTORY_SEPARATOR.$filename;
+            $fileAnalysisResult = $this->analyze($filePath);
+            // echo "<pre>";
+            // print_r($fileAnalysisResult);
+
+        
+            $fileProperties['filename'] = $fileAnalysisResult['filename'] ;
+            $path_parts = pathinfo($fileAnalysisResult['filename']);
+            $fileProperties['name'] = $path_parts['filename'];
+            $fileProperties['fileformat'] = $fileAnalysisResult['fileformat'];
+            $fileProperties['filesize'] = $fileAnalysisResult['filesize'];
+            $fileProperties['encoding']  = $fileAnalysisResult['encoding'] ;
+            $fileProperties['mime_type'] = $fileAnalysisResult['mime_type'];
+            $fileProperties['playtime_string'] = $fileAnalysisResult['playtime_string'];
+            $fileProperties['video'] = $fileAnalysisResult['video'] ;
+            $fileProperties['filepath'] = $filePath ;
+            $fileProperties['videoUrl'] = $this->getUploadFolderUrl().$filePath;
+            $fileList[] = $fileProperties; 
+
+        }
+        $this->fileList = $fileList;
+        return json_encode($this->fileList);
+    } 
+
+    function createJsonFileList(){
+        $jsonData = $this->getAllFiles();
+        $jsonDataFolder = $this->apiDataFolder;
+        $apiInfoFIle  = $this->apiInfoFile;
+        $fileUrl = $jsonDataFolder.DIRECTORY_SEPARATOR.$apiInfoFIle ;
+        $fp = fopen($fileUrl, 'c');
+        fwrite($fp, $jsonData);
+        fclose($fp);
+    }
 }
 ?>
