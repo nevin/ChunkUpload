@@ -42,8 +42,12 @@ To Sets max size of post data allowed. This setting also affects file upload. To
 `client_max_body_size 100M; `
 
 
-#### For video playback
-  - index.html
+#### For video playback using javascript
+  - index.html 
+
+ #### For video playback using angular library
+  - index-angular.html 
+
 #### for uploading video
   - uploader.html
 
