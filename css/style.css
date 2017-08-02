@@ -1,0 +1,23 @@
+#playlist{
+	
+}
+.playlistItem {
+	cursor: pointer;
+	height: 1.2em;
+	padding: 5px;
+	border-bottom: 1px solid orange;
+	color: black;
+	background-color: none;
+}
+.playlistItem:hover{
+	background-color:silver;
+	color : white;
+}
+
+.selected{
+	background-color:wheat;
+	color : red;
+	font-weight: bold;
+
+}
+

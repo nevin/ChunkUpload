@@ -1,93 +1,95 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title></title>
-        <link rel="stylesheet" type="text/css" href="css/videoViewer.css">
-        <script src="./lib/js/angular.min.js"></script>
-        <script src="./lib/js/angular-sanitize.min.js"></script>
-        <script src="./lib/js/videogular/videogular.js"></script>
-        <script src="./lib/js/videogular/vg-controls.js"></script>
-        <script src="./lib/js/videogular/vg-overlay-play.js"></script>
-        <script src="./lib/js/videogular/vg-poster.js"></script>
-        <script src="./lib/js/videogular/vg-buffering.js"></script>
-      
-        <script type="text/javascript" src="./js/videoViewApp.js"></script>
-        <script type="text/javascript" src="./js/controller/videoViewerController.js"></script>
-        <script type="text/javascript" src="./js/factories/videoFactory.js"></script>
-        <link href="css/bootstrap-combined.min.css" rel="stylesheet"/>
+	<head>
+		<title> view video</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+	</head>
+	<body>
+		<h1>Watch Video</h1>
+		<div id="videoPlayerContainer">
+
+			<video controls width="80%" height="auto" poster="img/Movie_icon.gif" id="videoPlayer">
+				<source src='' type="video/mp4">
+				<p>Your browser doesn't support HTML5 video..</p>
+			</video>
+		</div>
+		<hr>
+		<div>
+			<div id="playlist">
+				<div id="message">Please wait Playlist is loading..!</div>
+			</div>
+		</div>
+
+	</body>
+	<script>
 
 
-    </head>
-    <body>
-        <div ng-app="myApp">
-            <header class="main-header">
-                <div><span class="heading">Watch Video </span> <span class="file-upload  glyphicon glyphicon-upload"">
-                    <a href="uploader.html"><label for="upload" class="file-upload__label" ><i class="icon icon-upload"></i> Upload</label></a>
-                </span></div>
-             </header>
-            <br>
-            <div ng-controller="videoViewerController as videoController">
-                
-               
-                <div class="videogular-container" ng-cloak>
-                    <videogular vg-player-ready="videoController.onPlayerReady($API)" vg-complete="videoController.onCompleteVideo()" vg-theme="videoController.config.theme.url" class="video_container">
-                        <vg-media vg-src="videoController.config.sources"
-                                  vg-tracks="videoController.config.tracks">
-                        </vg-media>
+		var videoPlayer = document.getElementById('videoPlayer');
+		 videoPlayer.addEventListener('click', function () {
+	        if (videoPlayer.paused == false) {
+	            videoPlayer.pause();
+	            videoPlayer.firstChild.nodeValue = 'Play';
+	        } else {
+	            videoPlayer.play();
+	            videoPlayer.firstChild.nodeValue = 'Pause';
+	        }
+    	});
 
-                        <vg-controls>
-                            <vg-play-pause-button></vg-play-pause-button>
-                            <vg-time-display>{{ currentTime | date:'mm:ss':'+0000' }}</vg-time-display>
-                            <vg-scrub-bar>
-                                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                            </vg-scrub-bar>
-                            <vg-time-display>{{ timeLeft | date:'mm:ss':'+0000' }}</vg-time-display>
-                            <vg-volume>
-                                <vg-mute-button></vg-mute-button>
-                                <vg-volume-bar></vg-volume-bar>
-                            </vg-volume>
-                            <vg-fullscreen-button></vg-fullscreen-button>
-                        </vg-controls>
 
-                        <vg-overlay-play></vg-overlay-play>
-                        <vg-buffering></vg-buffering>
-                        <vg-poster vg-url='videoController.config.plugins.poster'></vg-poster>
+		// Call the webservices to load the playlist
 
-                    </videogular>
+		var loadPlayList = function (){
+			fetch('server/download.php').then(function(response) {
+			  if(response.ok) {
+			    return response.json();
+			  } 
+			  throw new Error('Network response was not ok.');
+			  }).then(function(playListData) { 
+		 	   var msg = document.getElementById('message');
+			   msg.textContent = ''
+			
+			  for (var i = 0 ; i < playListData.length; i++){
+			 	var listItem = document.createElement('div');
+				listItem.setAttribute('class', 'playlistItem');
+				listItem.textContent = playListData[i].name;
+				listItem.setAttribute('videoUrl', playListData[i].videoUrl);
+				listItem.setAttribute('mime_type', playListData[i].mime_type);
+				listItem.setAttribute('onClick', 'myfunc(this,true)');
+				document.getElementById('playlist').appendChild(listItem);
+				if(i == 0){
+					var videoPlayer = document.querySelector('video');
+					videoPlayer.src = playListData[i].videoUrl;
+					videoPlayer.type = playListData[i].mime_type;
+					listItem.className += ' selected';
 
-                </div>
-                <div class="video-description" ng-if="selectedVideo">
-                      <div class="desc-heading">{{selectedVideo.name}}</div>
-                      <div class="desc-subheading"><div class="desc-content" style="float:left"> Screen Resolution : <b>{{selectedVideo.video.resolution_x}} x {{selectedVideo.video.resolution_y}} </b></div><div  class="desc-content1"> Format : {{selectedVideo.fileformat}}</div></div>
-                </div>
+				}
+				
+		 	  }
+			  
+			}).catch(function(error) {
+			  console.log('There has been a problem with your fetch operation: ' + error.message);
+			  var msg = document.getElementById('message');
+			  msg.textContent = 'Something went wrong'
+			});
 
-                <div class="playlist">
-                    <div class="desc-heading">Videos <span ng-if="playList !='null'" class="badge">{{playList.length}}</span></div>
-                    <hr>
-                    <div ng-if="playList !='null'" class="playlistContent">
-                        <div  style="overflow:scroll; height:12em; background:silver" >
-                            <ul class="list-group">
-                                <li ng-repeat="(key,value) in playList track by $index" class="list-group-item"><a ng-click="videoController.setVideo(key)" ><i ng-class="selectedVideo.filename == value.filename ? 'icon icon-play':'icon icon-film'"></i> {{value.filename}}</a><label></li>
+		};
+		
+		loadPlayList();
 
-                            </ul>
-                        </div>
-                    </div>
-                    <div ng-if="playList=='null'">
-                        <div  style="overflow:hidden; height:3em; background:silver" >
-                           <div class="error">No Videos Found !</div>
-                            <div class="error">To Upload Video >> <a href="uploader.html">Click here</a> </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="veil" ng-show="isLoading"></div>
-                <div id="feedLoading" ng-show="isLoading">Loading...</div>
-
-            </div>
-        </div>
-
-    </body>
+		function myfunc(selectedVideo,autoPlay){
+			var active = document.querySelector(".selected");
+			             active.classList.remove("selected");
+			var videoPlayer = document.querySelector('video');
+			videoPlayer.src = selectedVideo.getAttribute('videoUrl');
+			selectedVideo.className += ' selected';
+			
+			videoPlayer.type = selectedVideo.getAttribute('mime_type');
+			if(autoPlay){
+				videoPlayer.play();
+			}
+			
+		}
+		
+	</script>
+	
 </html>
-
-
-
-
